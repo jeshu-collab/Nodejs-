@@ -23,12 +23,27 @@ app.route("/api/users/:id")
 
     .patch((req, res) => {
         // Assignment: Implement PATCH
-        return res.json({ status: "Pending" });
+        const id  = Number(req.params.id);
+        const body = req.body;
+        const user  = users.find((user) => user.id === id);
+        Object.assign(user,body);
+        fs.writeFile("./MOCK_DATA.json",JSON.stringify(users), (err,data) => {
+            return res.json({status: "Success"});
+        })
     })
 
     .delete((req, res) => {
         // Assignment: Implement DELETE
-        return res.json({ status: "Pending" });
+        const id = Number(req.params.id);
+        const user = users.find((user) => user.id === id);
+        if (!user) {
+            return res.status(404).json({ status: "User not found" });
+        }
+        users.splice(users.indexOf(user), 1);
+        fs.writeFile("./MOCK_DATA.json",JSON.stringify(users),(err,data) =>{
+            return res.json({ status: "Success" });
+        })
+        
     });
 
 
